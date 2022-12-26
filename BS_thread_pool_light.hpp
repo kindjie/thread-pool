@@ -162,7 +162,9 @@ public:
         push_task(
             [task_function, task_promise]
             {
+#ifndef NO_EXCEPT
                 try
+#endif
                 {
                     if constexpr (std::is_void_v<R>)
                     {
@@ -174,6 +176,7 @@ public:
                         task_promise->set_value(std::invoke(task_function));
                     }
                 }
+#ifndef NO_EXCEPT
                 catch (...)
                 {
                     try
@@ -184,6 +187,7 @@ public:
                     {
                     }
                 }
+#endif
             });
         return task_promise->get_future();
     }
